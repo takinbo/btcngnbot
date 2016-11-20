@@ -56,7 +56,7 @@ def start_command(bot, update):
 
 I can provide bitcoin prices across a number of exchanges in Naira and can also help you calculate prices for different quantities of bitcoin.
 
-How can I /help?'''.format(update.message.from_user.first_name), parse_mode=ParseMode.MARKDOWN)
+How can I /help?'''.format(update.message.from_user.first_name), parse_mode=ParseMode.MARKDOWN, quote=False)
 
 def price_command(bot, update, args):
     if len(args) > 0:
@@ -64,7 +64,7 @@ def price_command(bot, update, args):
         if not exchange:
             update.message.reply_text(
                 'Supported exchanges: {}'.format(', '.join(exchanges.keys())),
-                parse_mode=ParseMode.MARKDOWN)
+                parse_mode=ParseMode.MARKDOWN, quote=False)
             return
     else:
         exchange = None
@@ -84,12 +84,12 @@ def price_command(bot, update, args):
         response += '''```
 `Avg. Price     : ₦{:,.2f}`
 '''.format(get_exchange_rate())
-    update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, quote=False)
 
 def calc_command(bot, update, args):
     if len(args) < 1:
         response = help_messages['calc']
-        update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN)
+        update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, quote=False)
         return
 
     exchange = None
@@ -98,7 +98,7 @@ def calc_command(bot, update, args):
     if amount:
         amount = Decimal(amount)
     else:
-        update.message.reply_text('`Invalid amount supplied.`', parse_mode=ParseMode.MARKDOWN)
+        update.message.reply_text('`Invalid amount supplied.`', parse_mode=ParseMode.MARKDOWN, quote=False)
         return
 
     if len(args) > 1:
@@ -107,7 +107,7 @@ def calc_command(bot, update, args):
     if len(args) > 2:
         exchange = process.extractOne(args[2], exchanges.keys(), score_cutoff=60)
         if not exchange:
-            update.message.reply_text('`Supported exchanges: {}`'.format(', '.join(exchanges.keys())), parse_mode=ParseMode.MARKDOWN)
+            update.message.reply_text('`Supported exchanges: {}`'.format(', '.join(exchanges.keys())), parse_mode=ParseMode.MARKDOWN, quote=False)
             return
 
     if currency:
@@ -128,7 +128,7 @@ def calc_command(bot, update, args):
             ctx.rounding = ROUND_UP
             response = "`฿{:.8g}`".format(target)
 
-    update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, quote=False)
 
 def help_command(bot, update, args):
     topics = ['price', 'calc']
@@ -140,10 +140,10 @@ def help_command(bot, update, args):
 
     response = help_messages.get(topic, help_messages['general'])
 
-    update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, quote=False)
 
 def unknown_command(bot, update):
-    update.message.reply_text("Sorry I didn't understand your command. Please respond with /help for help.", parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text("Sorry I didn't understand your command. Please respond with /help for help.", parse_mode=ParseMode.MARKDOWN, quote=False)
 
 if __name__ == '__main__':
     updater = Updater(config("TOKEN"))
