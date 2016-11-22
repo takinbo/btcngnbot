@@ -38,5 +38,10 @@ def get_exchange_rate(exchange=None):
         rates = [get_exchange_rate(e) for e in exchanges.keys()]
         return sum(rates)/len(rates)
 
+@MWT(timeout=10)
+def get_exchange_ticker(exchange):
+    klass = exchanges[exchange]
+    return klass().ticker()
+
 if __name__ == '__main__':
     pass
