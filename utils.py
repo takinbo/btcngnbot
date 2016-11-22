@@ -3,8 +3,23 @@ from jinja2 import Environment, FileSystemLoader
 from mwt import MWT
 import exchanges as ex
 
-env = Environment(loader=FileSystemLoader(['templates']))
 exchanges = {klass.symbol: klass for klass in ex.__exchanges__}
+
+def naira(value):
+    if value:
+        return "₦{:,.2f}".format(float(value))
+    else:
+        return "???"
+
+def btc(value):
+    if value:
+        return "฿{:.8g}".format(float(value))
+    else:
+        return "???"
+
+env = Environment(loader=FileSystemLoader(['templates']))
+env.filters['naira'] = naira
+env.filters['btc'] = btc
 
 def render_to_string(template_name, context={}):
     return env.get_template(template_name).render(**context)

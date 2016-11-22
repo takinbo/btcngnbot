@@ -1,6 +1,6 @@
 from decimal import Decimal, ROUND_UP, localcontext
 from telegram import ParseMode
-from utils import render_to_string, exchanges, get_exchange_rate
+from utils import render_to_string, exchanges, get_exchange_rate, make_choice
 import re
 
 def calc_command(bot, update, args):
@@ -35,12 +35,12 @@ def calc_command(bot, update, args):
 
     if currency == tickers[1]:
         target = amount * rate
-        response = "`₦{:,.2f}`".format(target)
+        response = render_to_string('ngn.md', {'amount': target })
     else:
         target = amount / rate
         with localcontext() as ctx:
             ctx.prec = 8
             ctx.rounding = ROUND_UP
-            response = "`฿{:.8g}`".format(target)
+            response = render_to_string('btc.md', {'amount': target })
 
     update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, quote=False)

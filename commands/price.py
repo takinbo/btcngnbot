@@ -14,17 +14,13 @@ def price_command(bot, update, args):
 
     if exchange:
         exchange_rate = get_exchange_rate(exchange)
-        response = "`฿1 = ₦{:,.2f}`".format(exchange_rate)
+        response = render_to_string('quote.md', {'rate': exchange_rate})
     else:
-        response = '''*XBT/NGN Spot Prices*
-```
-'''
+        ctx = {'exchanges': []}
         for exchange in exchanges:
             rate = get_exchange_rate(exchange)
-            response += "{:<15}: ₦{:,.2f}\n".format(exchanges[exchange].name, rate)
+            ctx['exchanges'].append({'name': exchanges[exchange].name, 'rate': rate})
 
-        response = response.strip()
-        response += '''```
-`Avg. Price     : ₦{:,.2f}`
-'''.format(get_exchange_rate())
+        ctx['average_rate'] = get_exchange_rate()
+        response = render_to_string('price.md', ctx)
     update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, quote=False)
