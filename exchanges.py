@@ -10,7 +10,10 @@ class Exchange(object):
         pass
 
     def exchange_rate(self):
-        pass
+        return Decimal('0')
+
+    def ticker(self):
+        return {'bid': Decimal('0'), 'ask': Decimal('0')}
 
 
 class BitX(Exchange):
@@ -19,12 +22,19 @@ class BitX(Exchange):
 
     def exchange_rate(self):
         try:
-            res = requests.get("https://api.mybitx.com/api/1/tickers").json()
+            res = requests.get("https://api.mybitx.com/api/1/ticker?pair=XBTNGN").json()
             if res:
-                tradepair = next(filter(lambda t: t['pair'] == 'XBTNGN', res['tickers']))
-                return Decimal(tradepair['last_trade'])
+                return Decimal(res['last_trade'])
         except:
             return Decimal('0')
+
+    def ticker(self):
+        try:
+            res = requests.get("https://api.mybitx.com/api/1/ticker?pair=XBTNGN").json()
+            if res:
+                return {'bid': Decimal(res['bid']), 'ask': Decimal(res['ask'])}
+        except:
+            return {'bid': Decimal('0'), 'ask': Decimal('0')}
 
 
 class LBC(Exchange):
@@ -39,5 +49,24 @@ class LBC(Exchange):
         except:
             return Decimal('0')
 
+    def ticker(self):
+        t = {'bid': Decimal('0'), 'ask': Decimal('0')}
+        try:
+            bids = requests.get("https://localbitcoins.com/sell-bitcoins-online/NGN/national-bank-transfer/.json").json()
+            if bids:
+                bid = bids['data']['ad_list'][0]['data']['temp_price']
+                t['bid'] = Decimal(bid)
+        except:
+            pass
+
+        try:
+            asks = requests.get("https://localbitcoins.com/buy-bitcoins-online/NGN/national-bank-transfer/.json").json()
+            if asks:
+                ask = asks['data']['ad_list'][0]['data']['temp_price']
+                t['ask'] = Decimal(ask)
+        except:
+            pass
+
+        return t
 
 __exchanges__ = [BitX, LBC]
