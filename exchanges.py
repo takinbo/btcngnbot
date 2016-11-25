@@ -38,7 +38,7 @@ class BitX(Exchange):
 
 
 class LBC(Exchange):
-    name = 'LocalBitcoins'
+    name = 'LB'
     symbol = 'lb'
 
     def exchange_rate(self):
