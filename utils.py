@@ -13,7 +13,7 @@ def naira(value):
 
 def btc(value):
     if value:
-        return "฿{:.8g}".format(float(value))
+        return "฿{:.8f}".format(float(value))
     else:
         return "???"
 
