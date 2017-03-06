@@ -16,23 +16,23 @@ class Exchange(object):
         return {'bid': Decimal('0'), 'ask': Decimal('0')}
 
 
-class BitX(Exchange):
-    name = "BitX"
-    symbol = 'bitx'
+class BitSSA(Exchange):
+    name = "BitSSA"
+    symbol = 'bitssa'
 
     def exchange_rate(self):
         try:
-            res = requests.get("https://api.mybitx.com/api/1/ticker?pair=XBTNGN").json()
+            res = requests.get("https://bitssa.com/api/v2/trades.json?market=btcngn&limit=1").json()
             if res:
-                return Decimal(res['last_trade'])
+                return Decimal(res[0]['price'])
         except:
             return Decimal('0')
 
     def ticker(self):
         try:
-            res = requests.get("https://api.mybitx.com/api/1/ticker?pair=XBTNGN").json()
+            res = requests.get("https://bitssa.com/api/v2/tickers.json").json()
             if res:
-                return {'bid': Decimal(res['bid']), 'ask': Decimal(res['ask'])}
+                return {'bid': Decimal(res['btcngn']['ticker']['buy']), 'ask': Decimal(res['btcngn']['ticker']['sell'])}
         except:
             return {'bid': Decimal('0'), 'ask': Decimal('0')}
 
@@ -69,4 +69,26 @@ class LBC(Exchange):
 
         return t
 
-__exchanges__ = [BitX, LBC]
+
+class Luno(Exchange):
+    name = "Luno"
+    symbol = 'luno'
+
+    def exchange_rate(self):
+        try:
+            res = requests.get("https://api.mybitx.com/api/1/ticker?pair=XBTNGN").json()
+            if res:
+                return Decimal(res['last_trade'])
+        except:
+            return Decimal('0')
+
+    def ticker(self):
+        try:
+            res = requests.get("https://api.mybitx.com/api/1/ticker?pair=XBTNGN").json()
+            if res:
+                return {'bid': Decimal(res['bid']), 'ask': Decimal(res['ask'])}
+        except:
+            return {'bid': Decimal('0'), 'ask': Decimal('0')}
+
+
+__exchanges__ = [BitSSA, LBC, Luno]

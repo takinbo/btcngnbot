@@ -3,5 +3,5 @@
 ```
 Syntax : /price [exchange]
 Example: /price
-         /price bitx
+         /price luno
 ```
